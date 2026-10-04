@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: wordpress-app
+data:
+  mysql-database: wordpress
+  mysql-host: mysql
