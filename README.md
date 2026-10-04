@@ -6,36 +6,17 @@ This project was built on a local single-node MicroK8s cluster running in WSL2.
 
 ## Architecture
 
-```text
-Windows Browser
-      |
-      | WSL2 IP : NodePort
-      v
-WordPress NodePort Service
-      |
-      | selector: app=wordpress
-      v
-WordPress Pod
-      |
-      | DNS: mysql:3306
-      v
-MySQL ClusterIP Service
-      |
-      | selector: app=mysql
-      v
-MySQL Pod
-      |
-      | /var/lib/mysql
-      v
-PersistentVolumeClaim
-      |
-      v
-MicroK8s HostPath Storage
-```
+![Kubernetes Multi-Tier Application Architecture](screenshots/00-kubernetes-multitier-architecture.png)
 
-The WordPress tier is exposed through a `NodePort` Service, while MySQL remains internal to the cluster through a `ClusterIP` Service.
+The application follows a multi-tier architecture running on a local MicroK8s cluster in WSL2.
 
-WordPress does not depend on a MySQL Pod IP. Instead, Kubernetes DNS resolves the stable `mysql` Service name and the Service routes traffic to the current MySQL Pod.
+- A Windows browser accesses WordPress through the WSL2 IP and Kubernetes NodePort.
+- The WordPress Service routes traffic to the WordPress Pod.
+- WordPress connects to MySQL using the internal Kubernetes DNS name `mysql:3306`.
+- The MySQL ClusterIP Service routes database traffic to the MySQL Pod.
+- MySQL stores its data on a PersistentVolumeClaim backed by MicroK8s hostpath storage.
+- ConfigMaps and Secrets provide application configuration and database credentials.
+- Startup, readiness, and liveness probes monitor MySQL health.
 
 ## Kubernetes Concepts Practiced
 
